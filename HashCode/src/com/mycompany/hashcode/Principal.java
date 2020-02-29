@@ -161,7 +161,11 @@ public class Principal extends Thread {
 
 	private void borrarLibros(ArrayList<Libro> books) {
 		for (Libreria lib : listaLibrerias) {
-			lib.removeAll(books);
+			
+			for (Libro book : books) {
+				lib.remove(book);
+			}
+			
 			lib.calcularPuntos(diasRestantes);
 		}
 	}

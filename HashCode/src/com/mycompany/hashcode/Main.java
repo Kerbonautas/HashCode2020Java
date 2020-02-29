@@ -15,20 +15,14 @@ public class Main {
 		Principal f = new Principal("f_libraries_of_the_world.txt", "F");
 		
 		System.out.println("Launching threads...");
-		/*
+		
 		a.start();
-		b.start();
-		c.start();
-		d.start();
-		e.start();
+		//b.start();
+		//c.start();
+		//d.start();
+		//e.start();
 		f.start();
-		*/
-		a.run();
-		b.run();
-		c.run();
-		d.run();
-		e.run();
-		f.run();
+		
 	}
 
 }

@@ -64,6 +64,8 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 			
 			factor = (double) ((this.getPuntos())/(getDiasSignUp()+(this.size()/librosPorDiaAEscanear)));
 			
+			//factor = (double) ((this.getPuntos())/diasR);
+			
 		} else {
 			int index = diasR - getDiasSignUp();
 			
@@ -71,7 +73,8 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 				puntos += lib.getValor();
 			}
 			
-			factor = (double) (getPuntos() / getDiasSignUp() + index);			
+			factor = (double) (getPuntos() / getDiasSignUp() + index);		
+			//factor = (double) ((this.getPuntos())/diasR);
 		}
 	}
 
