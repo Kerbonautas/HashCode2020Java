@@ -58,7 +58,7 @@ public class Principal extends Thread {
 			escaneado.setIdLibreria(libreria.getidLibreria());
 			ArrayList<Integer> listaLibrosEscaneados = new ArrayList<Integer>();
 			int leer = Math.min(libreria.getNumeroLibros(), (diasRestantes * libreria.librosPorDiaAEscanear) - 1);
-			for (Libro book : libreria) {
+			for (Libro book : libreria.getLibrosUtiles(diasRestantes)) {
 				listaLibrosEscaneados.add(book.getId());
 				librosABorrar.add(book);
 			}

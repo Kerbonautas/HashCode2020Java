@@ -1,6 +1,7 @@
 package com.mycompany.hashcode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 	public int idLibreria;
@@ -49,6 +50,17 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 
 	public void setLibrosPorDiaAEscanear(int librosPorDiaAEscanear) {
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
+	}
+	
+	public List<Libro> getLibrosUtiles(int diasR) {
+		if (diasR <= diasSignUp) {
+			return new ArrayList <Libro>();
+		} else if(diasR > diasSignUp + (this.size() / librosPorDiaAEscanear)) { 
+			return this.subList(0, this.size());
+		} else {
+			int index = diasR - getDiasSignUp();
+			return this.subList(0, index*librosPorDiaAEscanear);
+		}
 	}
 
 	public void calcularPuntos(int diasR) {
