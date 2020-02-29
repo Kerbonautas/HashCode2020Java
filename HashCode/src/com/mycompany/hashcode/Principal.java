@@ -48,11 +48,10 @@ public class Principal extends Thread {
 
 	public void ejecutar() {
 		Collections.sort(listaLibrerias);
-		ArrayList<Libro> librosABorrar = new ArrayList<Libro>();
 		while (diasRestantes > 0 && listaLibrerias.size() > 0) {// numero dias restante
+			ArrayList<Libro> librosABorrar = new ArrayList<Libro>();
 			Escaneados escaneado = new Escaneados();
 			Libreria libreria = listaLibrerias.get(0);// siempre la primera
-			diasRestantes -= libreria.getDiasSignUp();
 			if (diasRestantes < 0)
 				break;
 			escaneado.setIdLibreria(libreria.getidLibreria());
@@ -62,12 +61,14 @@ public class Principal extends Thread {
 				listaLibrosEscaneados.add(book.getId());
 				librosABorrar.add(book);
 			}
+			if(listaLibrosEscaneados.isEmpty()) break;
 			escaneado.setLibrosEscaneados(listaLibrosEscaneados.size());
 			escaneado.setListaIdsLibrosEscaneados(listaLibrosEscaneados);
 			listaEscaneados.add(escaneado);
 			listaLibrerias.remove(0);
 			borrarLibros(librosABorrar);
 			Collections.sort(listaLibrerias);
+			diasRestantes -= libreria.getDiasSignUp();
 		}
 	}
 
@@ -160,6 +161,7 @@ public class Principal extends Thread {
 	}
 
 	private void borrarLibros(ArrayList<Libro> books) {
+		books.forEach(a->System.out.println("Delete: "+a.getId()));
 		for (Libreria lib : listaLibrerias) {
 			
 			for (Libro book : books) {

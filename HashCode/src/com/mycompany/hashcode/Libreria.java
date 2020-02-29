@@ -1,6 +1,7 @@
 package com.mycompany.hashcode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
@@ -53,7 +54,7 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 	}
 	
 	public List<Libro> getLibrosUtiles(int diasR) {
-		if (diasR <= diasSignUp) {
+		if (diasR < diasSignUp) {
 			return new ArrayList <Libro>();
 		} else if(diasR > diasSignUp + (this.size() / librosPorDiaAEscanear)) { 
 			return this.subList(0, this.size());
@@ -65,7 +66,14 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 
 	public void calcularPuntos(int diasR) {
 		
-		if (diasR <= diasSignUp) {
+		Collections.sort(this);
+		/*
+		for(Libro a:this) {
+			System.out.println("Libreria " + this.idLibreria + ": " + " - ID: " + a.getId() + " ... valor: " + a.getValor());
+		} */
+		//this.forEach(a -> System.out.println("Libreria " + this.idLibreria + ": " + " - ID: " + a.getId() + " ... valor: " + a.getValor()));
+		
+		if (diasR < diasSignUp) {
 			factor = 0d;
 			puntos = 0;
 		} else if(diasR > diasSignUp + (this.size() / librosPorDiaAEscanear)) {
@@ -96,8 +104,11 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 	
 	@Override
 	public boolean add(Libro e) {
-		if (!this.contains(e))
+		System.out.println("Libreria "+this.idLibreria+": "+ " - ID: " + e.getId() + " ... Valor: " + e.getValor());
+		if (!this.contains(e)) {
+			System.out.println("Added");
 			return super.add(e);
+		}
 		return false;
 	}
 
