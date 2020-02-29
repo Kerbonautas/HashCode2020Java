@@ -1,25 +1,19 @@
 package com.mycompany.hashcode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 
-public class Libreria implements Comparable<Libreria>{
+public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 	public int idLibreria;
 	public int numeroLibros;
 	public Integer diasSignUp;
 	public int librosPorDiaAEscanear;
-	public ArrayList<Integer> listaLibros;
-	public long puntos;
 
-	public Libreria(int idLibreria, int numeroLibros, int diasSignUp, int librosPorDiaAEscanear, ArrayList<Integer> listaLibros,long puntos) {
+	public Libreria(int idLibreria, int numeroLibros, int diasSignUp, int librosPorDiaAEscanear) {
 		super();
 		this.idLibreria = idLibreria;
 		this.numeroLibros = numeroLibros;
 		this.diasSignUp = Integer.valueOf(diasSignUp);
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
-		this.listaLibros = listaLibros;
-		this.puntos = puntos;
 	}
 
 	public int getidLibreria() {
@@ -54,27 +48,15 @@ public class Libreria implements Comparable<Libreria>{
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
 	}
 
-	public ArrayList<Integer> getListaLibros() {
-		return listaLibros;
+	public int getPuntos() {
+		return 0;
 	}
-
-	public void setListaLibros(ArrayList<Integer> listaLibros) {
-		this.listaLibros = listaLibros;
-	}
-
-	public long getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(long puntos) {
-		this.puntos = puntos;
-	}
-
+	
 	@Override
 	public int compareTo(Libreria lib) {
 		return lib.getFactor().compareTo(this.getFactor());
 	}
 	public Double getFactor() {
-	    return Double.valueOf((this.puntos)/(getDiasSignUp()+(listaLibros.size()/librosPorDiaAEscanear)));
+	    return Double.valueOf((this.getPuntos())/(getDiasSignUp()+(this.size()/librosPorDiaAEscanear)));
 	  }
 }

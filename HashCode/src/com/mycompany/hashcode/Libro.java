@@ -28,6 +28,14 @@ public class Libro implements Comparable<Libro>{
 		this.valor = valor;
 	}
 	
+	@Override
+	public boolean equals(Object arg0) {
+		if (arg0 instanceof Libro) {
+			return ((Libro) arg0).getId()==this.getId();
+		}
+		return super.equals(arg0);
+	}
+
 	//Se ordenarán de mayor a menor
 	@Override
 	public int compareTo(Libro o) {
