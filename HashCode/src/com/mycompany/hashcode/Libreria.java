@@ -7,6 +7,7 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 	public int numeroLibros;
 	public Integer diasSignUp;
 	public int librosPorDiaAEscanear;
+	public int puntos;
 
 	public Libreria(int idLibreria, int numeroLibros, int diasSignUp, int librosPorDiaAEscanear) {
 		super();
@@ -14,6 +15,7 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 		this.numeroLibros = numeroLibros;
 		this.diasSignUp = Integer.valueOf(diasSignUp);
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
+		calcularPuntos();
 	}
 
 	public int getidLibreria() {
@@ -48,10 +50,22 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
 	}
 
-	public int getPuntos() {
-		return 0;
+	public void calcularPuntos() {
+		this.puntos=0;
+		this.forEach(book -> puntos+=book.getValor());
 	}
 	
+	public int getPuntos() {
+		return this.puntos;
+	}
+	
+	@Override
+	public boolean add(Libro e) {
+		if (!this.contains(e))
+			return super.add(e);
+		return false;
+	}
+
 	@Override
 	public int compareTo(Libreria lib) {
 		return lib.getFactor().compareTo(this.getFactor());

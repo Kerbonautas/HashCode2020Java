@@ -48,24 +48,25 @@ public class Principal extends Thread{
 		Collections.sort(listaLibrerias);
 		while(numeroDias>0&&listaLibrerias.size()>0) {//numero dias restante
 			Escaneados escaneado = new Escaneados();
-			Libreria lib = listaLibrerias.get(0);//siempre la primera
-			numeroDias -= lib.getDiasSignUp();
+			Libreria libreria = listaLibrerias.get(0);//siempre la primera
+			numeroDias -= libreria.getDiasSignUp();
 			if(numeroDias < 0) break;
-			escaneado.setIdLibreria(lib.getidLibreria());
+			escaneado.setIdLibreria(libreria.getidLibreria());
 			ArrayList<Integer> listaLibrosEscaneados = new ArrayList<Integer>();
-			int leer = Math.min(lib.getNumeroLibros(), (numeroDias*lib.librosPorDiaAEscanear)-1);
+			int leer = Math.min(libreria.getNumeroLibros(), (numeroDias*libreria.librosPorDiaAEscanear)-1);
 			//System.out.println(lib.getListaLibros().size());
 			//System.out.println(leer);
-			for (Integer i:lib.getListaLibros()/*.subList(0, leer)*/) {
-				listaLibrosEscaneados.add(i);
-				listaPuntosLibro.put(i, 0);
+			for (Libro book:libreria) {
+				listaLibrosEscaneados.add(book.getId());
+				borrarLibro(book);
+				//listaPuntosLibro.put(book.getId(), 0);//TODO cambiar para eliminar los libros del resto de librerias
 			}
 			escaneado.setLibrosEscaneados(listaLibrosEscaneados.size());
 			escaneado.setListaIdsLibrosEscaneados(listaLibrosEscaneados);
 			listaEscaneados.add(escaneado);
 			listaLibrerias.remove(0);
 			for(Libreria libr : listaLibrerias) {
-				libr.setPuntos(contarPuntos(libr.getListaLibros()));
+				libr.calcularPuntos();
 			}
 			Collections.sort(listaLibrerias);
 		}
@@ -169,11 +170,7 @@ public class Principal extends Thread{
 
 		}
 	}
-	public long contarPuntos(ArrayList<Integer> listaLibros) {
-		long puntos=0;
-		for(Integer i : listaLibros)
-			puntos+=listaPuntosLibro.get(i);
-		return puntos;
+	private void borrarLibro(Libro book) {
+		listaLibrerias.forEach(libreria-> libreria.remove(book));
 	}
-
 }
