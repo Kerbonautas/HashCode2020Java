@@ -22,8 +22,6 @@ public class Main {
 		d.start();
 		e.start();
 		f.start();
-		
-		System.out.println("Finishing program... thanks for reading Kerbonautas`s source code.");
 	}
 
 }

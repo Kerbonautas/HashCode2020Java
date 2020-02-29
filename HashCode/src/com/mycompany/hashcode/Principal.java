@@ -20,18 +20,16 @@ public class Principal extends Thread{
 	public int numeroLibrosDiferentes;
 	public int numeroLibrerias;
 	public int numeroDias;
-	public HashMap<Integer, Integer> listaPuntosTotales;
+	public HashMap<Integer, Integer> listaPuntosLibro;
 	public ArrayList<Libreria> listaLibrerias;
 	public ArrayList<Escaneados> listaEscaneados;
 
 	public Principal(String file, String type) {
 		fichATratar = file;
 		this.type = type;
-		listaPuntosTotales = new HashMap<Integer, Integer>();
+		listaPuntosLibro = new HashMap<Integer, Integer>(); //Almacena los puntos que se obteniente en cada libro <id, valor>
 		listaLibrerias = new ArrayList<Libreria>();
 		listaEscaneados = new ArrayList<Escaneados>();
-		
-		
 	}
 	
 	@Override
@@ -60,7 +58,7 @@ public class Principal extends Thread{
 			//System.out.println(leer);
 			for (Integer i:lib.getListaLibros()/*.subList(0, leer)*/) {
 				listaLibrosEscaneados.add(i);
-				listaPuntosTotales.put(i, 0);
+				listaPuntosLibro.put(i, 0);
 			}
 			escaneado.setLibrosEscaneados(listaLibrosEscaneados.size());
 			escaneado.setListaIdsLibrosEscaneados(listaLibrosEscaneados);
@@ -88,7 +86,7 @@ public class Principal extends Thread{
 			linea = br.readLine();
 			String[] listaAux = linea.split(" ");
 			for (int i = 0; i < listaAux.length; i++) {
-				listaPuntosTotales.put(i, Integer.valueOf(listaAux[i]));
+				listaPuntosLibro.put(i, Integer.valueOf(listaAux[i]));
 			}
 
 			for (int idLibreria = 0; idLibreria < numeroLibrerias; idLibreria++) {
@@ -99,11 +97,12 @@ public class Principal extends Thread{
 				//System.out.println("numLib: "+numeroLibros+",diasSing: "+diasSignUp+"libros dia: "+librosPorDiaAEscanear);
 				linea = br.readLine();
 				int[] intlist = Stream.of(linea.split(" ")).mapToInt(Integer::parseInt).toArray();
-				ArrayList<Integer> listaLibros = new ArrayList<Integer>(intlist.length);
-				for (int i : intlist)
-					listaLibros.add(i);
-				long puntos = contarPuntos(listaLibros);
-				listaLibrerias.add(new Libreria(idLibreria, numeroLibros, diasSignUp, librosPorDiaAEscanear, listaLibros, puntos));
+				
+				Libreria lbr = new Libreria(idLibreria, numeroLibros, diasSignUp, librosPorDiaAEscanear);
+				
+				for (int i : intlist) lbr.add(new Libro(i, listaPuntosLibro.get(i)));
+				
+				listaLibrerias.add(lbr);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -173,7 +172,7 @@ public class Principal extends Thread{
 	public long contarPuntos(ArrayList<Integer> listaLibros) {
 		long puntos=0;
 		for(Integer i : listaLibros)
-			puntos+=listaPuntosTotales.get(i);
+			puntos+=listaPuntosLibro.get(i);
 		return puntos;
 	}
 
