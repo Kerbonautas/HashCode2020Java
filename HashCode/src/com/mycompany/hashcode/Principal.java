@@ -14,29 +14,39 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
-public class Principal {
-	public static final String fichATratar = "e_so_many_books";
-	public static int numeroLibrosDiferentes;
-	public static int numeroLibrerias;
-	public static int numeroDias;
-	public static HashMap<Integer, Integer> listaPuntosTotales;
-	public static ArrayList<Libreria> listaLibrerias;
-	public static ArrayList<Escaneados> listaEscaneados;
+public class Principal extends Thread{
+	public String fichATratar;
+	public String type;
+	public int numeroLibrosDiferentes;
+	public int numeroLibrerias;
+	public int numeroDias;
+	public HashMap<Integer, Integer> listaPuntosTotales;
+	public ArrayList<Libreria> listaLibrerias;
+	public ArrayList<Escaneados> listaEscaneados;
 
-	public static void main(String[] args) {
+	public Principal(String file, String type) {
+		fichATratar = file;
+		this.type = type;
 		listaPuntosTotales = new HashMap<Integer, Integer>();
 		listaLibrerias = new ArrayList<Libreria>();
 		listaEscaneados = new ArrayList<Escaneados>();
+		
+		
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		System.out.println("Launching " + type + "...");
+		
 		leerFichero();
-		/*for(int i = 0; i < listaLibrerias.size(); i++) {
-			Libreria lib = listaLibrerias.get(i);
-			System.out.println(lib.getidLibreria());
-		}*/
 		ejecutar();
 		escribirFichero();
+		
+		System.out.println(type + " ended.");
 	}
 
-	public static void ejecutar() {
+	public void ejecutar() {
 		Collections.sort(listaLibrerias);
 		while(numeroDias>0&&listaLibrerias.size()>0) {//numero dias restante
 			Escaneados escaneado = new Escaneados();
@@ -63,8 +73,8 @@ public class Principal {
 		}
 	}
 
-	public static void leerFichero() {
-		File input = new File("C:\\Users\\cgmar\\Desktop\\tests\\" + fichATratar + ".txt");
+	public void leerFichero() {
+		File input = new File(".\\GoogleFiles\\in\\" + fichATratar);
 		BufferedReader br = null;
 		FileInputStream fis = null;
 		String linea = "";
@@ -116,8 +126,8 @@ public class Principal {
 
 	}
 
-	public static void escribirFichero() {
-		File output = new File("C:\\Users\\cgmar\\Desktop\\tests\\" + fichATratar + ".out");
+	public void escribirFichero() {
+		File output = new File(".\\GoogleFiles\\out\\" + type + ".txt");
 		FileOutputStream fos = null;
 		BufferedWriter bw = null;
 		String escritura = "";
@@ -160,7 +170,7 @@ public class Principal {
 
 		}
 	}
-	public static long contarPuntos(ArrayList<Integer> listaLibros) {
+	public long contarPuntos(ArrayList<Integer> listaLibros) {
 		long puntos=0;
 		for(Integer i : listaLibros)
 			puntos+=listaPuntosTotales.get(i);
