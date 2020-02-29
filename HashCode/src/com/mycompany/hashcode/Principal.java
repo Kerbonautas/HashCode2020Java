@@ -14,12 +14,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
+import jdk.jshell.Diag;
+
 public class Principal extends Thread{
 	public String fichATratar;
 	public String type;
 	public int numeroLibrosDiferentes;
 	public int numeroLibrerias;
-	public int numeroDias;
+	public int diasRestantes;
 	public HashMap<Integer, Integer> listaPuntosLibro;
 	public ArrayList<Libreria> listaLibrerias;
 	public ArrayList<Escaneados> listaEscaneados;
@@ -34,7 +36,6 @@ public class Principal extends Thread{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		System.out.println("Launching " + type + "...");
 		
 		leerFichero();
@@ -47,29 +48,23 @@ public class Principal extends Thread{
 	public void ejecutar() {
 		Collections.sort(listaLibrerias);
 		ArrayList<Libro> librosABorrar = new ArrayList<Libro>();
-		while(numeroDias>0&&listaLibrerias.size()>0) {//numero dias restante
+		while(diasRestantes>0&&listaLibrerias.size()>0) {//numero dias restante
 			Escaneados escaneado = new Escaneados();
 			Libreria libreria = listaLibrerias.get(0);//siempre la primera
-			numeroDias -= libreria.getDiasSignUp();
-			if(numeroDias < 0) break;
+			diasRestantes -= libreria.getDiasSignUp();
+			if(diasRestantes < 0) break;
 			escaneado.setIdLibreria(libreria.getidLibreria());
 			ArrayList<Integer> listaLibrosEscaneados = new ArrayList<Integer>();
-			int leer = Math.min(libreria.getNumeroLibros(), (numeroDias*libreria.librosPorDiaAEscanear)-1);
-			//System.out.println(lib.getListaLibros().size());
-			//System.out.println(leer);
+			int leer = Math.min(libreria.getNumeroLibros(), (diasRestantes*libreria.librosPorDiaAEscanear)-1);
 			for (Libro book:libreria) {
 				listaLibrosEscaneados.add(book.getId());
 				librosABorrar.add(book);
-				//listaPuntosLibro.put(book.getId(), 0);//TODO cambiar para eliminar los libros del resto de librerias
 			}
-			borrarLibros(librosABorrar);
 			escaneado.setLibrosEscaneados(listaLibrosEscaneados.size());
 			escaneado.setListaIdsLibrosEscaneados(listaLibrosEscaneados);
 			listaEscaneados.add(escaneado);
 			listaLibrerias.remove(0);
-			for(Libreria libr : listaLibrerias) {
-				libr.calcularPuntos();
-			}
+			borrarLibros(librosABorrar);
 			Collections.sort(listaLibrerias);
 		}
 	}
@@ -85,7 +80,7 @@ public class Principal extends Thread{
 			linea = br.readLine();
 			numeroLibrosDiferentes = Integer.parseInt(linea.split(" ")[0]);
 			numeroLibrerias = Integer.parseInt(linea.split(" ")[1]);
-			numeroDias = Integer.parseInt(linea.split(" ")[2]);
+			diasRestantes = Integer.parseInt(linea.split(" ")[2]);
 			linea = br.readLine();
 			String[] listaAux = linea.split(" ");
 			for (int i = 0; i < listaAux.length; i++) {
@@ -97,21 +92,15 @@ public class Principal extends Thread{
 				int numeroLibros = Integer.parseInt(linea.split(" ")[0]);
 				int diasSignUp = Integer.parseInt(linea.split(" ")[1]);
 				int librosPorDiaAEscanear = Integer.parseInt(linea.split(" ")[2]);
-				//System.out.println("numLib: "+numeroLibros+",diasSing: "+diasSignUp+"libros dia: "+librosPorDiaAEscanear);
 				linea = br.readLine();
 				int[] intlist = Stream.of(linea.split(" ")).mapToInt(Integer::parseInt).toArray();
-				
-				Libreria lbr = new Libreria(idLibreria, numeroLibros, diasSignUp, librosPorDiaAEscanear);
+				Libreria lbr = new Libreria(idLibreria, numeroLibros, diasSignUp, librosPorDiaAEscanear, diasRestantes);
 				
 				for (int i : intlist) lbr.add(new Libro(i, listaPuntosLibro.get(i)));
 				
 				listaLibrerias.add(lbr);
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -152,27 +141,24 @@ public class Principal extends Thread{
 				bw.write(escritura);
 				
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (bw != null) {
-					bw.close();
-				}
-				if (fos != null) {
-					fos.close();
-				}
+				if (bw != null)bw.close();
+				if (fos != null)fos.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
 	}
 	private void borrarLibros(ArrayList<Libro> books) {
-		listaLibrerias.forEach(libreria-> libreria.removeAll(books));
+		listaLibrerias.forEach(libreria->{
+			libreria.removeAll(books);
+			libreria.calcularPuntos(diasRestantes);
+		}
+		);
+	
 	}
 }
