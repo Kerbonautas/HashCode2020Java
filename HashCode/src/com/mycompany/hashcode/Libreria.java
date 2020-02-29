@@ -8,14 +8,15 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 	public Integer diasSignUp;
 	public int librosPorDiaAEscanear;
 	public int puntos;
+	public Double factor;
 
-	public Libreria(int idLibreria, int numeroLibros, int diasSignUp, int librosPorDiaAEscanear) {
+	public Libreria(int idLibreria, int numeroLibros, int diasSignUp, int librosPorDiaAEscanear, int diasRestantes) {
 		super();
 		this.idLibreria = idLibreria;
 		this.numeroLibros = numeroLibros;
 		this.diasSignUp = Integer.valueOf(diasSignUp);
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
-		calcularPuntos();
+		calcularPuntos(diasRestantes);
 	}
 
 	public int getidLibreria() {
@@ -50,11 +51,30 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 		this.librosPorDiaAEscanear = librosPorDiaAEscanear;
 	}
 
-	public void calcularPuntos() {
-		this.puntos=0;
-		this.forEach(book -> puntos+=book.getValor());
+	public void calcularPuntos(int diasR) {
+		
+		if (diasR <= diasSignUp) {
+			factor = 0d;
+			puntos = 0;
+		} else if(diasR > diasSignUp + (this.size() / librosPorDiaAEscanear)) {
+			
+			for(Libro lib : this) {
+				puntos  += lib.getValor();
+			}
+			
+			factor = (double) ((this.getPuntos())/(getDiasSignUp()+(this.size()/librosPorDiaAEscanear)));
+			
+		} else {
+			int index = diasR - getDiasSignUp();
+			
+			for (Libro lib : this.subList(0, index*numeroLibros)) {
+				puntos += lib.getValor();
+			}
+			
+			factor = (double) (getPuntos() / getDiasSignUp() + index);			
+		}
 	}
-	
+
 	public int getPuntos() {
 		return this.puntos;
 	}
@@ -71,6 +91,7 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 		return lib.getFactor().compareTo(this.getFactor());
 	}
 	public Double getFactor() {
-	    return Double.valueOf((this.getPuntos())/(getDiasSignUp()+(this.size()/librosPorDiaAEscanear)));
+	    //return Double.valueOf((this.getPuntos())/(getDiasSignUp()+(this.size()/librosPorDiaAEscanear)));
+		return factor;
 	  }
 }
