@@ -67,7 +67,7 @@ public class Libreria extends ArrayList<Libro> implements Comparable<Libreria>{
 		} else {
 			int index = diasR - getDiasSignUp();
 			
-			for (Libro lib : this.subList(0, index*numeroLibros)) {
+			for (Libro lib : this.subList(0, index*librosPorDiaAEscanear)) {
 				puntos += lib.getValor();
 			}
 			

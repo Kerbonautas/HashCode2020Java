@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import jdk.jshell.Diag;
 
-public class Principal extends Thread{
+public class Principal extends Thread {
 	public String fichATratar;
 	public String type;
 	public int numeroLibrosDiferentes;
@@ -29,34 +29,36 @@ public class Principal extends Thread{
 	public Principal(String file, String type) {
 		fichATratar = file;
 		this.type = type;
-		listaPuntosLibro = new HashMap<Integer, Integer>(); //Almacena los puntos que se obteniente en cada libro <id, valor>
+		listaPuntosLibro = new HashMap<Integer, Integer>(); // Almacena los puntos que se obteniente en cada libro <id,
+															// valor>
 		listaLibrerias = new ArrayList<Libreria>();
 		listaEscaneados = new ArrayList<Escaneados>();
 	}
-	
+
 	@Override
 	public void run() {
 		System.out.println("Launching " + type + "...");
-		
+
 		leerFichero();
 		ejecutar();
 		escribirFichero();
-		
+
 		System.out.println(type + " ended.");
 	}
 
 	public void ejecutar() {
 		Collections.sort(listaLibrerias);
 		ArrayList<Libro> librosABorrar = new ArrayList<Libro>();
-		while(diasRestantes>0&&listaLibrerias.size()>0) {//numero dias restante
+		while (diasRestantes > 0 && listaLibrerias.size() > 0) {// numero dias restante
 			Escaneados escaneado = new Escaneados();
-			Libreria libreria = listaLibrerias.get(0);//siempre la primera
+			Libreria libreria = listaLibrerias.get(0);// siempre la primera
 			diasRestantes -= libreria.getDiasSignUp();
-			if(diasRestantes < 0) break;
+			if (diasRestantes < 0)
+				break;
 			escaneado.setIdLibreria(libreria.getidLibreria());
 			ArrayList<Integer> listaLibrosEscaneados = new ArrayList<Integer>();
-			int leer = Math.min(libreria.getNumeroLibros(), (diasRestantes*libreria.librosPorDiaAEscanear)-1);
-			for (Libro book:libreria) {
+			int leer = Math.min(libreria.getNumeroLibros(), (diasRestantes * libreria.librosPorDiaAEscanear) - 1);
+			for (Libro book : libreria) {
 				listaLibrosEscaneados.add(book.getId());
 				librosABorrar.add(book);
 			}
@@ -95,9 +97,10 @@ public class Principal extends Thread{
 				linea = br.readLine();
 				int[] intlist = Stream.of(linea.split(" ")).mapToInt(Integer::parseInt).toArray();
 				Libreria lbr = new Libreria(idLibreria, numeroLibros, diasSignUp, librosPorDiaAEscanear, diasRestantes);
-				
-				for (int i : intlist) lbr.add(new Libro(i, listaPuntosLibro.get(i)));
-				
+
+				for (int i : intlist)
+					lbr.add(new Libro(i, listaPuntosLibro.get(i)));
+
 				listaLibrerias.add(lbr);
 			}
 		} catch (Exception e) {
@@ -139,26 +142,27 @@ public class Principal extends Thread{
 				}
 				escritura = escritura.trim();
 				bw.write(escritura);
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (bw != null)bw.close();
-				if (fos != null)fos.close();
+				if (bw != null)
+					bw.close();
+				if (fos != null)
+					fos.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 		}
 	}
+
 	private void borrarLibros(ArrayList<Libro> books) {
-		listaLibrerias.forEach(libreria->{
-			libreria.removeAll(books);
-			libreria.calcularPuntos(diasRestantes);
+		for (Libreria lib : listaLibrerias) {
+			lib.removeAll(books);
+			lib.calcularPuntos(diasRestantes);
 		}
-		);
-	
 	}
 }
